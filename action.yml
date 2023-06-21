@@ -8,7 +8,6 @@ inputs:
     default: latest
 
 runs:
-  shell: powershell
   using: composite
   steps:
       - run: |
