@@ -8,6 +8,7 @@ inputs:
     default: latest
 
 runs:
+  shell: powershell
   using: composite
   steps:
       - run: |
@@ -30,7 +31,8 @@ runs:
           $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
           Invoke-WebRequest -Uri $url -OutFile $exe
           Start-Process -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
-        
+        shell: powershell
+
 branding:
   icon: star
   color: green
