@@ -13,6 +13,8 @@ runs:
       - run: |
           $psCommand = 'Start-Process ' + "`"${env:GITHUB_ACTION}`"" + ' -Verb RunAs'
           Start-Process powershell -Verb RunAs -ArgumentList 'Invoke-Expression', $psCommand
+        shell: powershell
+      
       - id: llvm-msvc-latest_release
         uses: actions/github-script@v4
         with:
