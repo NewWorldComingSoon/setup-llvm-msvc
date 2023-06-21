@@ -25,6 +25,7 @@ runs:
             })
             console.log(data.tag_name)
             return data.tag_name
+            
       - run: |
           $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
           $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
