@@ -34,5 +34,5 @@ runs:
         shell: powershell
 
 branding:
-  icon: star
-  color: green
+  icon: NewWorld.svg
+  
