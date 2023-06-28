@@ -6,42 +6,44 @@ inputs:
     description: Version to install
     required: false
     default: latest
+  cache-path:
+    description: Path to cache
+    required: true
 
 runs:
   using: composite
   steps:
-      - name: Run as admin
-        run: |
-          $psCommand = 'Start-Process ' + "`"${env:GITHUB_ACTION}`"" + ' -Verb RunAs'
-          Start-Process powershell -Verb RunAs -ArgumentList 'Invoke-Expression', $psCommand
-        shell: powershell
+    - name: Run as admin
+      run: |
+        $psCommand = 'Start-Process ' + "`"${env:GITHUB_ACTION}`"" + ' -Verb RunAs'
+        Start-Process powershell -Verb RunAs -ArgumentList 'Invoke-Expression', $psCommand
+      shell: powershell
 
-      - name: Get the latest release of llvm-msvc
-        id: llvm-msvc-latest_release
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const { data } = await github.repos.getLatestRelease({
-              owner: 'NewWorldComingSoon',
-              repo: 'llvm-msvc-build'
-            })
-            console.log(data.tag_name)
-            return data.tag_name
-  
-      - name: Cache llvm-msvc_X86_64_installer.exe
-        id: cache-llvm-msvc
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.TEMP }} 
-          key: ${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
-          
-      - name: Download and install llvm-msvc_X86_64_installer.exe
-        if: steps.cache-llvm-msvc.outputs.cache-hit != 'true'
-        run: |
-          echo "Download and install llvm-msvc_X86_64_installer.exe."
-          $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
-          $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
-          Invoke-WebRequest -Uri $url -OutFile $exe
-          Start-Process -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
-        shell: powershell
-  
+    - name: Get the latest release of llvm-msvc
+      id: llvm-msvc-latest_release
+      uses: actions/github-script@v4
+      with:
+        script: |
+          const { data } = await github.repos.getLatestRelease({
+            owner: 'NewWorldComingSoon',
+            repo: 'llvm-msvc-build'
+          })
+          console.log(data.tag_name)
+          return data.tag_name
+
+    - name: Cache llvm-msvc_X86_64_installer.exe
+      id: cache-llvm-msvc
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.cache-path }}
+        key: ${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
+
+    - name: Download and install llvm-msvc_X86_64_installer.exe
+      if: steps.cache-llvm-msvc.outputs.cache-hit != 'true'
+      run: |
+        echo "Download and install llvm-msvc_X86_64_installer.exe."
+        $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
+        $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
+        Invoke-WebRequest -Uri $url -OutFile $exe
+        Start-Process -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
+      shell: powershell
