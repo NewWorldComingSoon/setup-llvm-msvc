@@ -20,7 +20,7 @@ runs:
       id: cache-llvm-msvc
       uses: actions/cache@v3
       with:
-        path: ${{ env.TEMP }} 
+        path: env.TEMP
         key: ${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
 
     - name: Get the latest release of llvm-msvc
