@@ -39,7 +39,7 @@ runs:
       run: |
         $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
         $exe = Join-Path llvm-msvc-bin 'llvm-msvc_X86_64_installer.exe'
-        if (${{ steps.cache-llvm-msvc.outputs.cache-hit }} == 'true') {
+        if (${steps.cache-llvm-msvc.outputs.cache-hit} == 'true') {
           echo "Cached llvm-msvc_X86_64_installer.exe found. Skipping download."
         } else {
           echo "Download and install llvm-msvc_X86_64_installer.exe."
