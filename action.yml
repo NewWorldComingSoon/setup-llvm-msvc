@@ -26,10 +26,22 @@ runs:
             console.log(data.tag_name)
             return data.tag_name
             
+      - id: cache-llvm-msvc
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.TEMP }} 
+          key: llvm-msvc-installer-${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
+        
       - run: |
-          $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
-          $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
-          Invoke-WebRequest -Uri $url -OutFile $exe
-          Start-Process -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
+          if [ -f "${{ env.TEMP }}/llvm-msvc_X86_64_installer.exe" ]; then
+            echo "Restored llvm-msvc_X86_64_installer.exe from cache."
+            Start-Process -FilePath "${{ env.TEMP }}/llvm-msvc_X86_64_installer.exe" -ArgumentList '/verysilent' -Verb RunAs
+          else
+            echo "Download and install llvm-msvc_X86_64_installer.exe."
+            $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
+            $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
+            Invoke-WebRequest -Uri $url -OutFile $exe
+            Start-Process -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
+          fi
         shell: powershell
   
