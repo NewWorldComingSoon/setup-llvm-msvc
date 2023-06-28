@@ -39,7 +39,7 @@ runs:
       if: steps.cache-llvm-msvc.outputs.cache-hit == 'true'
       run: |
         echo "Cached llvm-msvc_X86_64_installer.exe found. Skipping download."
-        $exe = Join-Path $env.TEMP 'llvm-msvc_X86_64_installer.exe'
+        $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
       shell: powershell
 
@@ -48,7 +48,7 @@ runs:
       run: |
         echo "Download and install llvm-msvc_X86_64_installer.exe."
         $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
-        $exe = Join-Path $env.TEMP 'llvm-msvc_X86_64_installer.exe'
+        $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
         Invoke-WebRequest -Uri $url -OutFile $exe
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
       shell: powershell
