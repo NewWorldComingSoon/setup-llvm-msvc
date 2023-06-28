@@ -6,9 +6,6 @@ inputs:
     description: Version to install
     required: false
     default: latest
-  cache-path:
-    description: Path to cache
-    required: true
 
 runs:
   using: composite
@@ -18,6 +15,13 @@ runs:
         $psCommand = 'Start-Process ' + "`"${env:GITHUB_ACTION}`"" + ' -Verb RunAs'
         Start-Process powershell -Verb RunAs -ArgumentList 'Invoke-Expression', $psCommand
       shell: powershell
+
+    - name: Cache llvm-msvc_X86_64_installer.exe
+      id: cache-llvm-msvc
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.TEMP }} 
+        key: ${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
 
     - name: Get the latest release of llvm-msvc
       id: llvm-msvc-latest_release
@@ -30,13 +34,6 @@ runs:
           })
           console.log(data.tag_name)
           return data.tag_name
-
-    - name: Cache llvm-msvc_X86_64_installer.exe
-      id: cache-llvm-msvc
-      uses: actions/cache@v3
-      with:
-        path: ${{ inputs.cache-path }}
-        key: ${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
 
     - name: Download and install llvm-msvc_X86_64_installer.exe
       if: steps.cache-llvm-msvc.outputs.cache-hit != 'true'
