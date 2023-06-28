@@ -16,13 +16,6 @@ runs:
         Start-Process powershell -Verb RunAs -ArgumentList 'Invoke-Expression', $psCommand
       shell: powershell
 
-    - name: Cache llvm-msvc_X86_64_installer.exe
-      id: cache-llvm-msvc
-      uses: actions/cache@v3
-      with:
-        path: env.TEMP
-        key: ${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
-
     - name: Get the latest release of llvm-msvc
       id: llvm-msvc-latest_release
       uses: actions/github-script@v4
@@ -36,7 +29,6 @@ runs:
           return data.tag_name
 
     - name: Download and install llvm-msvc_X86_64_installer.exe
-      if: steps.cache-llvm-msvc.outputs.cache-hit != 'true'
       run: |
         echo "Download and install llvm-msvc_X86_64_installer.exe."
         $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
