@@ -43,5 +43,5 @@ runs:
         uses: actions/cache@v2
         with:
           path: ${{ env.TEMP }} 
-          key: llvm-msvc-installer-${{ runner.os }}-${{ hashFiles('**/llvm-msvc_X86_64_installer.exe') }}
+          key: llvm-msvc-installer-${{ runner.os }}-${{ hashFiles('${{ env.TEMP }}/llvm-msvc_X86_64_installer.exe') }}
   
