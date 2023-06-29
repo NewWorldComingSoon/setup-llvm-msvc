@@ -1,3 +1,4 @@
+
 name: Install llvm-msvc
 description: Install llvm-msvc
 
@@ -31,13 +32,7 @@ runs:
           })
           console.log(data.tag_name)
           return data.tag_name
-
-    - name: Restore cache
-      uses: actions/cache@v2
-      id: restore-cache
-      with:
-        path: '${{ inputs.path }}\${{ inputs.version }}'
-        
+      
     - name: Download and Install llvm-msvc_X86_64_installer.exe
       run: |
         Write-Host "Checking if llvm-msvc_X86_64_installer.exe already exists."
@@ -54,25 +49,19 @@ runs:
         }
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
         Write-Host "exe: $exe"
-
-        $cacheRestored = "${{ steps.restore-cache.outputs.cache-hit }}"
-        Write-Host "cacheRestored: $cacheRestored"
-        if ($cacheRestored -eq "true") {
-          Write-Host "Cache hit! The cache was successfully restored. Skipping download."
-        } else {
-          Write-Host "Cache miss! Downloading llvm-msvc_X86_64_installer.exe..."
+        
+        if (!(Test-Path -Path $exe)) {
+          Write-Host "Downloading llvm-msvc_X86_64_installer.exe..."
           $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + $releaseVersion + '/llvm-msvc_X86_64_installer.exe'
           Invoke-WebRequest -Uri $url -OutFile $exe
           Write-Host "llvm-msvc_X86_64_installer.exe downloaded successfully."
+        } else {
+          Write-Host "llvm-msvc_X86_64_installer.exe already exists."
         }
-        
+
         Write-Host "Installing llvm-msvc_X86_64_installer.exe..."
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
         Write-Host "llvm-msvc_X86_64_installer.exe installed successfully."
       shell: powershell
       
-    - name: Save cache
-      uses: actions/cache@v2
-      id: save-cache
-      with:
-        path: '${{ inputs.path }}\${{ inputs.version }}'
+
