@@ -32,8 +32,8 @@ runs:
       run: |
         Write-Host "Download llvm-msvc_X86_64_installer.exe."
         $releaseVersion = 'llvm-msvc-build-v2.6'
-        Write-Host "Version: $version"
-        $latestVersion = ($version -eq "latest")
+        Write-Host "Version: ${{ inputs.version }}"
+        $latestVersion = (${{ inputs.version }} == "latest")
         if ($latestVersion) {
           Write-Host "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
@@ -51,7 +51,7 @@ runs:
       run: |
         Write-Host "Install llvm-msvc_X86_64_installer.exe."
         $releaseVersion = 'llvm-msvc-build-v2.6'
-        $latestVersion = ($version -eq "latest")
+        $latestVersion = (${{ inputs.version }} == "latest")
         if ($latestVersion) {
           Write-Host "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
