@@ -32,6 +32,7 @@ runs:
       run: |
         echo "Download llvm-msvc_X86_64_installer.exe."
         $releaseVersion = ${{ github.event.inputs.version }}  
+        $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         if (-not $releaseVersion -or $releaseVersion -eq 'latest') {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
