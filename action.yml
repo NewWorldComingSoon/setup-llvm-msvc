@@ -56,7 +56,8 @@ runs:
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
         Write-Host "exe: $exe"
 
-        if (steps.restore-cache.outputs.cache-hit == 'true' || steps.restore-cache.outputs.cache-hit == true) {
+        $cacheRestored = "${{ steps.restore-cache.outputs.cache-hit }}"
+        if ($cacheRestored -eq "true") {
           Write-Host "Cache hit! The cache was successfully restored. Skipping download."
         } else {
           Write-Host "Cache miss! Downloading llvm-msvc_X86_64_installer.exe..."
