@@ -37,7 +37,6 @@ runs:
           New-Item -ItemType Directory -Force -Path $releaseFolder
         }
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
-        $exe
         Invoke-WebRequest -Uri $url -OutFile $exe
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
       shell: powershell
