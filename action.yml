@@ -32,7 +32,7 @@ runs:
       run: |
         echo "Download llvm-msvc_X86_64_installer.exe."
         $releaseVersion = 'llvm-msvc-build-v2.6'
-        $latestVersion = (${{ inputs.version }}.ToString() -eq "latest")
+        $latestVersion = ($version -eq "latest")
         if ($latestVersion) {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
@@ -50,7 +50,7 @@ runs:
       run: |
         echo "Install llvm-msvc_X86_64_installer.exe."
         $releaseVersion = 'llvm-msvc-build-v2.6'
-        $latestVersion = (${{ inputs.version }}.ToString() -eq "latest")
+        $latestVersion = ($version -eq "latest")
         if ($latestVersion) {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
