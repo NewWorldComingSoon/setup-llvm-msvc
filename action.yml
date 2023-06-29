@@ -37,7 +37,7 @@ runs:
           Write-Host "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
-        $releaseFolder = Join-Path $env:TEMP $releaseVersion
+        $releaseFolder = Join-Path $GITHUB_WORKSPACE $releaseVersion
         if (!(Test-Path -Path $releaseFolder)) {
           New-Item -ItemType Directory -Force -Path $releaseFolder
         }
