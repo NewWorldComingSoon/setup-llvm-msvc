@@ -32,7 +32,7 @@ runs:
       run: |
         echo "Download llvm-msvc_X86_64_installer.exe."
         New-Variable latest -Value ($version -eq 'latest') -Option Constant
-        $releaseVersion = $version
+        $releaseVersion = 'llvm-msvc-build-v2.6'
         if ($latest) {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
@@ -50,7 +50,7 @@ runs:
       run: |
         echo "Install llvm-msvc_X86_64_installer.exe."
         New-Variable latest -Value ($version -eq 'latest') -Option Constant
-        $releaseVersion = $version
+        $releaseVersion = 'llvm-msvc-build-v2.6'
         if ($latest) {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
