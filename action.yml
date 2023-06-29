@@ -27,10 +27,10 @@ runs:
           })
           console.log(data.tag_name)
           return data.tag_name
-          
-    - name: Install llvm-msvc_X86_64_installer.exe
+
+    - name: Download llvm-msvc_X86_64_installer.exe
       run: |
-        echo "Download and install llvm-msvc_X86_64_installer.exe."
+        echo "Download llvm-msvc_X86_64_installer.exe."
         $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
         $releaseFolder = Join-Path $env:TEMP ${{ steps.llvm-msvc-latest_release.outputs.result }}
         if (!(Test-Path -Path $releaseFolder)) {
@@ -38,5 +38,12 @@ runs:
         }
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
         Invoke-WebRequest -Uri $url -OutFile $exe
+      shell: powershell 
+      
+    - name: Install llvm-msvc_X86_64_installer.exe
+      run: |
+        echo "Install llvm-msvc_X86_64_installer.exe."
+        $releaseFolder = Join-Path $env:TEMP ${{ steps.llvm-msvc-latest_release.outputs.result }}
+        $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
       shell: powershell
