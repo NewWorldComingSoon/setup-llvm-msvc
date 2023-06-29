@@ -25,7 +25,6 @@ runs:
       id: llvm-msvc-latest_release
       uses: actions/github-script@v4
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { data } = await github.repos.getLatestRelease({
             owner: 'NewWorldComingSoon',
