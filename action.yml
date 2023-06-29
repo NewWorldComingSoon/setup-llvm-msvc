@@ -28,27 +28,15 @@ runs:
           console.log(data.tag_name)
           return data.tag_name
           
-    - name: Cache llvm-msvc_X86_64_installer.exe
-      id: cache-llvm-msvc
-      uses: actions/cache@v3
-      with: 
-        path: $env.TEMP
-        key: llvm-msvc_X86_64_installer.exe
-
-    - name: Install llvm-msvc_X86_64_installer.exe with cache 
-      if: steps.cache-llvm-msvc.outputs.cache-hit == 'true'
-      run: |
-        echo "Cached llvm-msvc_X86_64_installer.exe found. Skipping download."
-        $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
-        Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
-      shell: powershell
-
-    - name: Install llvm-msvc_X86_64_installer.exe without cache
-      if: steps.cache-llvm-msvc.outputs.cache-hit != 'true'
+    - name: Install llvm-msvc_X86_64_installer.exe
       run: |
         echo "Download and install llvm-msvc_X86_64_installer.exe."
         $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + ${{ steps.llvm-msvc-latest_release.outputs.result }} + '/llvm-msvc_X86_64_installer.exe'
-        $exe = Join-Path $env:TEMP 'llvm-msvc_X86_64_installer.exe'
+        $releaseFolder = Join-Path $env:TEMP ${{ steps.llvm-msvc-latest_release.outputs.result }}
+        if (!(Test-Path -Path $releaseFolder)) {
+          New-Item -ItemType Directory -Force -Path $releaseFolder
+        }
+        $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
         Invoke-WebRequest -Uri $url -OutFile $exe
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
       shell: powershell
