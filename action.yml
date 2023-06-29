@@ -41,13 +41,14 @@ runs:
           Write-Host "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
-        $releaseFolder = $releaseFolder = "${{ inputs.path }}\$releaseVersion"
+        $releaseFolder = "${{ inputs.path }}\$releaseVersion"
         Write-Host "Release folder: $releaseFolder"
         if (!(Test-Path -Path $releaseFolder)) {
           New-Item -ItemType Directory -Force -Path $releaseFolder
         }
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
-
+        Write-Host "exe: $exe"
+        
         if (!(Test-Path -Path $exe)) {
           Write-Host "Downloading llvm-msvc_X86_64_installer.exe..."
           $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + $releaseVersion + '/llvm-msvc_X86_64_installer.exe'
