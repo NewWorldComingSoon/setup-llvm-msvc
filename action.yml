@@ -32,6 +32,13 @@ runs:
           console.log(data.tag_name)
           return data.tag_name
 
+    - name: Restore cache
+      uses: actions/cache@v2
+      id: restore-cache
+      with:
+        path: "${{ inputs.path }}\${{ inputs.version }}"
+        key: ${{ runner.os }}-llvm-msvc-${{ inputs.version }}
+        
     - name: Download and Install llvm-msvc_X86_64_installer.exe
       run: |
         Write-Host "Checking if llvm-msvc_X86_64_installer.exe already exists."
@@ -62,3 +69,10 @@ runs:
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
         Write-Host "llvm-msvc_X86_64_installer.exe installed successfully."
       shell: powershell
+      
+    - name: Save cache
+      uses: actions/cache@v2
+      id: save-cache
+      with:
+        path: "${{ inputs.path }}\${{ inputs.version }}"
+        key: ${{ runner.os }}-llvm-msvc-${{ inputs.version }}
