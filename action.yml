@@ -37,7 +37,6 @@ runs:
       id: restore-cache
       with:
         path: '${{ inputs.path }}\${{ inputs.version }}'
-        key: ${{ runner.os }}-llvm-msvc-${{ inputs.version }}
         
     - name: Download and Install llvm-msvc_X86_64_installer.exe
       run: |
@@ -77,4 +76,3 @@ runs:
       id: save-cache
       with:
         path: '${{ inputs.path }}\${{ inputs.version }}'
-        key: ${{ runner.os }}-llvm-msvc-${{ inputs.version }}
