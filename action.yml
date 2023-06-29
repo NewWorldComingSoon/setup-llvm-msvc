@@ -55,16 +55,16 @@ runs:
         }
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
         Write-Host "exe: $exe"
-        
-        if (!(Test-Path -Path $exe)) {
-          Write-Host "Downloading llvm-msvc_X86_64_installer.exe..."
+
+        if (steps.restore-cache.outputs.cache-hit == 'true' || steps.restore-cache.outputs.cache-hit == true) {
+          Write-Host "Cache hit! The cache was successfully restored. Skipping download."
+        } else {
+          Write-Host "Cache miss! Downloading llvm-msvc_X86_64_installer.exe..."
           $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + $releaseVersion + '/llvm-msvc_X86_64_installer.exe'
           Invoke-WebRequest -Uri $url -OutFile $exe
           Write-Host "llvm-msvc_X86_64_installer.exe downloaded successfully."
-        } else {
-          Write-Host "llvm-msvc_X86_64_installer.exe already exists."
         }
-
+        
         Write-Host "Installing llvm-msvc_X86_64_installer.exe..."
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
         Write-Host "llvm-msvc_X86_64_installer.exe installed successfully."
