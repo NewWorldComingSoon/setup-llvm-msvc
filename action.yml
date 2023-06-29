@@ -28,34 +28,31 @@ runs:
           console.log(data.tag_name)
           return data.tag_name
 
-    - name: Download llvm-msvc_X86_64_installer.exe
+    - name: Download and Install llvm-msvc_X86_64_installer.exe
       run: |
-        Write-Host "Download llvm-msvc_X86_64_installer.exe."
+        Write-Host "Checking if llvm-msvc_X86_64_installer.exe already exists."
         $releaseVersion = "${{ inputs.version }}"
         Write-Host "Version: $releaseVersion"
         if ($releaseVersion -eq "latest") {
           Write-Host "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
-        $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + $releaseVersion + '/llvm-msvc_X86_64_installer.exe'
         $releaseFolder = Join-Path $env:TEMP $releaseVersion
         if (!(Test-Path -Path $releaseFolder)) {
           New-Item -ItemType Directory -Force -Path $releaseFolder
         }
         $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
-        Invoke-WebRequest -Uri $url -OutFile $exe
-      shell: powershell 
-      
-    - name: Install llvm-msvc_X86_64_installer.exe
-      run: |
-        Write-Host "Install llvm-msvc_X86_64_installer.exe."
-        $releaseVersion = "${{ inputs.version }}"
-        Write-Host "Version: $releaseVersion"
-        if ($releaseVersion -eq "latest") {
-          Write-Host "Use the latest version."
-          $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
+
+        if (!(Test-Path -Path $exe)) {
+          Write-Host "Downloading llvm-msvc_X86_64_installer.exe..."
+          $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + $releaseVersion + '/llvm-msvc_X86_64_installer.exe'
+          Invoke-WebRequest -Uri $url -OutFile $exe
+          Write-Host "llvm-msvc_X86_64_installer.exe downloaded successfully."
+        } else {
+          Write-Host "llvm-msvc_X86_64_installer.exe already exists."
         }
-        $releaseFolder = Join-Path $env:TEMP $releaseVersion
-        $exe = Join-Path $releaseFolder 'llvm-msvc_X86_64_installer.exe'
+
+        Write-Host "Installing llvm-msvc_X86_64_installer.exe..."
         Start-Process -Wait -FilePath $exe -ArgumentList '/verysilent' -Verb RunAs
+        Write-Host "llvm-msvc_X86_64_installer.exe installed successfully."
       shell: powershell
