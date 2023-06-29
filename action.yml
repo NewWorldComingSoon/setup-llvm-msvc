@@ -31,9 +31,9 @@ runs:
     - name: Download llvm-msvc_X86_64_installer.exe
       run: |
         echo "Download llvm-msvc_X86_64_installer.exe."
-        New-Variable latest -Value (${{ inputs.version }} -eq 'latest') -Option Constant
+        New-Variable latestVersion -Value (${{ inputs.version }} -eq 'latest') -Option Constant
         $releaseVersion = 'llvm-msvc-build-v2.6'
-        if ($latest) {
+        if ($latestVersion) {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
@@ -49,9 +49,9 @@ runs:
     - name: Install llvm-msvc_X86_64_installer.exe
       run: |
         echo "Install llvm-msvc_X86_64_installer.exe."
-        New-Variable latest -Value (${{ inputs.version }} -eq 'latest') -Option Constant
+        New-Variable latestVersion -Value (${{ inputs.version }} -eq 'latest') -Option Constant
         $releaseVersion = 'llvm-msvc-build-v2.6'
-        if ($latest) {
+        if ($latestVersion) {
           echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
