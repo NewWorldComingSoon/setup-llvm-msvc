@@ -49,6 +49,7 @@ runs:
       run: |
         echo "Install llvm-msvc_X86_64_installer.exe."
         $releaseVersion = ${{ github.event.inputs.version }}  
+        $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         if (-not $releaseVersion -or $releaseVersion -eq 'latest') {
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
