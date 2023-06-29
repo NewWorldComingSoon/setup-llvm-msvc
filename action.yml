@@ -33,6 +33,7 @@ runs:
         echo "Download llvm-msvc_X86_64_installer.exe."
         $releaseVersion = ${{ github.event.inputs.version }}  
         if (-not $releaseVersion -or $releaseVersion -eq 'latest') {
+          echo "Use the latest version."
           $releaseVersion = ${{ steps.llvm-msvc-latest_release.outputs.result }}
         }
         $url = 'https://github.com/NewWorldComingSoon/llvm-msvc-build/releases/download/' + $releaseVersion + '/llvm-msvc_X86_64_installer.exe'
