@@ -57,6 +57,7 @@ runs:
         Write-Host "exe: $exe"
 
         $cacheRestored = "${{ steps.restore-cache.outputs.cache-hit }}"
+        Write-Host "cacheRestored: $cacheRestored"
         if ($cacheRestored -eq "true") {
           Write-Host "Cache hit! The cache was successfully restored. Skipping download."
         } else {
