@@ -5,6 +5,7 @@ inputs:
   version:
     description: Version to install
     required: false
+    default: 'latest'
 
 runs:
   using: composite
